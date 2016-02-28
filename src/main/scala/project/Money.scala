@@ -16,14 +16,9 @@ object Money {
 
 class Money(val amount: Double, val currency:String)  extends Expression {
 
-  def times(factor: Double): Money = {
+  def times(factor: Double): Expression = {
     new Money(this.amount * factor, this.currency)
   }
-
-  def plus(other: Money): Expression = {
-    new Sum(this, other)
-  }
-
 
   override def reduce(bank: Bank, currency: String): Money =  {
     val rate = bank.getRate(this.currency, currency)

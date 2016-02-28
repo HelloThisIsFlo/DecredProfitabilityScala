@@ -7,6 +7,10 @@ package project
   */
 trait Expression {
   def reduce(bank: Bank, currency: String): Money
+
+  def plus(other: Expression): Expression = {
+    new Sum(this, other)
+  }
 }
 
 

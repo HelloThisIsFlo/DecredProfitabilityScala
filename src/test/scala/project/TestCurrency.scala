@@ -7,8 +7,6 @@ import org.scalatest.{BeforeAndAfter, FunSuite}
   */
 class TestCurrency extends FunSuite with BeforeAndAfter {
 
-  val DECRED_TO_DOLLAR = 2
-
   val DECRED_CURRENCY = Money.DECRED_CURRENCY
   val DOLLAR_CURRENCY = Money.DOLLAR_CURRENCY
 
@@ -44,7 +42,6 @@ class TestCurrency extends FunSuite with BeforeAndAfter {
   }
 
   test("Test simple addition using the Bank to resolve currencies : 5$ + 8$ = 13$") {
-    pending
     val sum:Expression = fiveDollar.plus(eightDollar)
     val bank = new Bank
     val result = bank.reduce(sum, Money.DOLLAR_CURRENCY)
@@ -78,12 +75,26 @@ class TestCurrency extends FunSuite with BeforeAndAfter {
     }
   }
 
-
   test("1 Decred + 1 Dollar == 3 Dollar if conversion rate is : 1DEC -> 2USD") {
-    val sum:Expression = Money.decred(1).plus(Money.dollar(1))
+    val oneDollar:Expression = Money.dollar(1)
+    val oneDecred:Expression = Money.decred(1)
+
+    val sum:Expression = oneDecred.plus(oneDollar)
     val bank = new Bank()
-    bank.addRate(Money.DECRED_CURRENCY, Money.DOLLAR_CURRENCY, DECRED_TO_DOLLAR)
+    bank.addRate(Money.DECRED_CURRENCY, Money.DOLLAR_CURRENCY, 2)
     val result = bank.reduce(sum, Money.DOLLAR_CURRENCY)
     assert(result == Money.dollar(3))
+  }
+
+  test("Test the sum of a sum") {
+    val sumEquals3Dollars = Money.dollar(1).plus(Money.decred(1))
+    val twoDollar = Money.dollar(2)
+
+    val totalsum = sumEquals3Dollars.plus(twoDollar)
+    val bank = new Bank
+    bank.addRate(Money.DECRED_CURRENCY, Money.DOLLAR_CURRENCY, 2)
+    val result = bank.reduce(totalsum, Money.DOLLAR_CURRENCY)
+
+    assert(result == Money.dollar(5))
   }
 }
