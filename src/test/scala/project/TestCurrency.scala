@@ -24,22 +24,7 @@ class TestCurrency extends FunSuite with BeforeAndAfter {
     eightDollar = Money.dollar(8)
   }
 
-  test("Test addition on Decred") {
-    val result = fiveDecred.plus(eightDecred)
-    assert(Money.decred(5 + 8) == result)
-  }
-
-  test("Test multiplication on Decred") {
-    val result = fiveDecred.times(8)
-    assert(Money.decred(5 * 8) == result)
-  }
-
-  test("Test multiplication on Dollar") {
-    val result = fiveDollar.plus(eightDollar)
-    assert(Money.dollar(5 + 8) == result)
-  }
-
-  test("Test addition on Dollar") {
+  test("Test multiplication : 5$ * 8 = 40") {
     val result = fiveDollar.times(8)
     assert(Money.dollar(5 * 8) == result)
   }
@@ -56,6 +41,11 @@ class TestCurrency extends FunSuite with BeforeAndAfter {
   test("Check if the right currency is used") {
     assert(fiveDecred.currency == DECRED_CURRENCY)
     assert(eightDollar.currency == DOLLAR_CURRENCY)
+  }
+
+  test("Test simple addition : 5$ + 8$ = 13$") {
+    val result = fiveDollar.plus(eightDollar)
+    assert(Money.dollar(5 + 8) == result)
   }
 
 //  test("1 Decred + 1 Dollar == 3 Dollar if conversion rate is : 1DEC -> 2USD") {
