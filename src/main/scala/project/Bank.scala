@@ -7,7 +7,7 @@ package project
 class Bank {
 
   def addRateConversionToDollar(currency: String, rate: Double): Unit = {
-    throw new NotImplementedError()
+    //do nothing
   }
 
   def reduce(expression: Expression, currency: String): Money ={

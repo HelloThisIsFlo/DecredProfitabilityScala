@@ -9,4 +9,4 @@ trait Expression {
 
 }
 
-class Sum(first: Money, second: Money) extends Expression
+class Sum(first: Expression, second: Expression) extends Expression
