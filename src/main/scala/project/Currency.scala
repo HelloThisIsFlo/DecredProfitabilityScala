@@ -6,35 +6,46 @@ object Money {
   val DOLLAR_CURRENCY: String = "USD"
 
   def dollar(amount: Double): Dollar = {
-    Dollar(amount, DOLLAR_CURRENCY)
+    new Dollar(amount, DOLLAR_CURRENCY)
   }
 
   def decred(amount: Double): Decred = {
-    Decred(amount, DECRED_CURRENCY)
+    new Decred(amount, DECRED_CURRENCY)
   }
 }
 
-trait Money {
-  def amount: Double
-  def currency: String
+class Money(val amount: Double, val currency:String) {
+
+  def times(factor: Double): Money = {
+    new Money(this.amount * factor, this.currency)
+  }
+
+  def canEqual(other: Any): Boolean = other.isInstanceOf[Money]
+
+  override def equals(other: Any): Boolean = other match {
+    case that: Money =>
+      (that canEqual this) &&
+        amount == that.amount &&
+        currency == that.currency
+    case _ => false
+  }
+
+  override def hashCode(): Int = {
+    val state = Seq(amount, currency)
+    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+  }
 }
 
-case class Decred(amount: Double, currency: String) extends Money {
+class Decred(amount: Double, currency: String) extends Money(amount, currency) {
   def plus(other: Decred): Money = {
-    Decred(this.amount + other.amount, this.currency)
+    new Decred(this.amount + other.amount, this.currency)
   }
 
-  def times(factor: Double): Money = {
-    Money.decred(this.amount * factor)
-  }
 }
 
-case class Dollar(amount: Double, currency: String) extends Money {
+class Dollar(amount: Double, currency: String) extends Money(amount, currency) {
   def plus(other: Dollar): Money = {
-    Dollar(this.amount + other.amount, this.currency)
+    new Dollar(amount + other.amount, this.currency)
   }
 
-  def times(factor: Double): Money = {
-    Money.dollar(this.amount * factor)
-  }
 }

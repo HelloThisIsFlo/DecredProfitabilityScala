@@ -7,6 +7,8 @@ import org.scalatest.{BeforeAndAfter, FunSuite}
   */
 class TestCurrency extends FunSuite with BeforeAndAfter {
 
+  val DECRED_TO_DOLLAR = 2
+
   val DECRED_CURRENCY = Money.DECRED_CURRENCY
   val DOLLAR_CURRENCY = Money.DOLLAR_CURRENCY
 
@@ -56,7 +58,11 @@ class TestCurrency extends FunSuite with BeforeAndAfter {
     assert(eightDollar.currency == DOLLAR_CURRENCY)
   }
 
-  test("Check immutability currency parameter") {
-    pending
+  test("1 Decred + 1 Dollar == 3 Dollar if conversion rate is : 1DEC == 2USD") {
+    val sum:Expression = new Sum(Money.decred(1), Money.decred(1))
+    val bank = new Bank()
+    bank.addRateConversionToDollar(Money.DECRED_CURRENCY, DECRED_TO_DOLLAR)
+    val result = bank.reduce(sum, Money.DOLLAR_CURRENCY)
+    assert(result == Money.dollar(3))
   }
 }
