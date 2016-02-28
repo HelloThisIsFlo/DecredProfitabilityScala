@@ -20,8 +20,14 @@ class Money(val amount: Double, val currency:String)  extends Expression {
     new Money(this.amount * factor, this.currency)
   }
 
-  def plus(other: Money): Money = {
-    new Money(this.amount + other.amount, this.currency)
+  def plus(other: Money): Expression = {
+    new Sum(this, other)
+  }
+
+
+  override def reduce(bank: Bank, currency: String): Money =  {
+    val rate = bank.getRate(this.currency, currency)
+    new Money(rate * this.amount, currency)
   }
 
   def canEqual(other: Any): Boolean = other.isInstanceOf[Money]

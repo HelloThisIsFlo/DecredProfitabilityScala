@@ -6,7 +6,7 @@ package project
   * Could be a sum, a Money, or else . . . .
   */
 trait Expression {
-
+  def reduce(bank: Bank, currency: String): Money
 }
 
-class Sum(first: Expression, second: Expression) extends Expression
+

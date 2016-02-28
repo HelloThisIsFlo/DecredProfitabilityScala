@@ -43,16 +43,47 @@ class TestCurrency extends FunSuite with BeforeAndAfter {
     assert(eightDollar.currency == DOLLAR_CURRENCY)
   }
 
-  test("Test simple addition : 5$ + 8$ = 13$") {
-    val result = fiveDollar.plus(eightDollar)
-    assert(Money.dollar(5 + 8) == result)
+  test("Test simple addition using the Bank to resolve currencies : 5$ + 8$ = 13$") {
+    pending
+    val sum:Expression = fiveDollar.plus(eightDollar)
+    val bank = new Bank
+    val result = bank.reduce(sum, Money.DOLLAR_CURRENCY)
+    assert(result == Money.dollar(5 + 8))
   }
 
-//  test("1 Decred + 1 Dollar == 3 Dollar if conversion rate is : 1DEC -> 2USD") {
-//    val sum:Expression = Money.decred(1).plus(Money.dollar(1))
-//    val bank = new Bank()
-//    bank.addRateConversionToDollar(Money.DECRED_CURRENCY, DECRED_TO_DOLLAR)
-//    val result = bank.reduce(sum, Money.DOLLAR_CURRENCY)
-//    assert(result == Money.dollar(3))
-//  }
+  test("Test reduce sum") {
+    val sum = new Sum(Money.dollar(1), Money.dollar(2))
+    val bank = new Bank
+    val result = bank.reduce(sum, Money.DOLLAR_CURRENCY)
+    assert(result == Money.dollar(3))
+  }
+
+  test("Test reduce money : 1DEC == 1DEC") {
+    val bank = new Bank
+    val result = bank.reduce(Money.dollar(1), Money.DOLLAR_CURRENCY)
+    assert(Money.dollar(1) == result)
+  }
+
+  test("Test reduce money with different currencies") {
+    val bank = new Bank
+    bank.addRate(Money.DECRED_CURRENCY, Money.DOLLAR_CURRENCY, 2)
+    val result = bank.reduce(Money.decred(1), Money.DOLLAR_CURRENCY)
+    assert(Money.dollar(2) == result)
+  }
+
+  test("Rate not available => Throw exception") {
+    val bank = new Bank
+    intercept[RateNotDefinedException] {
+      bank.reduce(Money.decred(1), Money.DOLLAR_CURRENCY)
+    }
+  }
+
+
+  test("1 Decred + 1 Dollar == 3 Dollar if conversion rate is : 1DEC -> 2USD") {
+    val sum:Expression = Money.decred(1).plus(Money.dollar(1))
+    val bank = new Bank()
+    bank.addRate(Money.DECRED_CURRENCY, Money.DOLLAR_CURRENCY, DECRED_TO_DOLLAR)
+    val result = bank.reduce(sum, Money.DOLLAR_CURRENCY)
+    assert(result == Money.dollar(3))
+  }
 }

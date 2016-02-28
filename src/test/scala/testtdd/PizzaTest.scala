@@ -16,22 +16,19 @@ class PizzaTest extends FunSuite with BeforeAndAfter{
   }
 
   test("New pizza has zero toppings") {
-    pending
-    assert(pizza.getToppings().isEmpty)
+    assert(pizza.toppings.isEmpty)
   }
 
   test("Add one topping -> 1 topping on the pizza") {
-    pending
     pizza.addTopping(Topping(TOPPING_NAME))
-    assert(pizza.getToppings().contains(Topping(TOPPING_NAME)))
+    assert(pizza.toppings.contains(Topping(TOPPING_NAME)))
   }
 
   test("Remove topping") {
-    pending
     pizza.addTopping(Topping(TOPPING_NAME))
-    assert(pizza.getToppings().contains(Topping(TOPPING_NAME)))
+    assert(pizza.toppings.contains(Topping(TOPPING_NAME)))
     pizza.removeTopping(Topping(TOPPING_NAME))
-    assert(!pizza.getToppings().contains(Topping(TOPPING_NAME)))
+    assert(!pizza.toppings.contains(Topping(TOPPING_NAME)))
   }
 
   test("test pizza pricing") (pending)
