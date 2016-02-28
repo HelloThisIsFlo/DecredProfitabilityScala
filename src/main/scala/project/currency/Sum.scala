@@ -1,4 +1,4 @@
-package project
+package project.currency
 
 /**
   * Created by Shock on 2/28/2016.

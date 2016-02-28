@@ -1,4 +1,4 @@
-package project
+package project.currency
 
 import scala.collection.mutable
 

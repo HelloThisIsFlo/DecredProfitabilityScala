@@ -1,4 +1,4 @@
-package project
+package project.currency
 
 /**
   * Represents an expression.
@@ -10,6 +10,10 @@ trait Expression {
 
   def plus(other: Expression): Expression = {
     new Sum(this, other)
+  }
+
+  def minus(other: Expression): Expression = {
+    new Substraction(this, other)
   }
 }
 

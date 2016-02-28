@@ -1,6 +1,7 @@
 package project
 
 import org.scalatest.{BeforeAndAfter, FunSuite}
+import project.currency._
 
 /**
   * Created by Shock on 2/28/2016.
@@ -96,5 +97,18 @@ class TestCurrency extends FunSuite with BeforeAndAfter {
     val result = bank.reduce(totalsum, Money.DOLLAR_CURRENCY)
 
     assert(result == Money.dollar(5))
+  }
+
+  test("Test substraction") {
+    val equalsFiveDollars = Money.dollar(7).minus(Money.decred(1)) // =5 with current conversion rate
+    val oneDollar = Money.dollar(1)
+
+    val totalSubstraction = equalsFiveDollars.minus(oneDollar)
+    val bank = new Bank
+    bank.addRate(Money.DECRED_CURRENCY, Money.DOLLAR_CURRENCY, 2)
+    val result = bank.reduce(totalSubstraction, Money.DOLLAR_CURRENCY)
+
+    assert(result == Money.dollar(4))
+
   }
 }

@@ -1,4 +1,4 @@
-package project
+package project.currency
 
 object Money {
 
@@ -16,7 +16,7 @@ object Money {
 
 class Money(val amount: Double, val currency:String)  extends Expression {
 
-  def times(factor: Double): Expression = {
+  def times(factor: Double): Money = {
     new Money(this.amount * factor, this.currency)
   }
 
