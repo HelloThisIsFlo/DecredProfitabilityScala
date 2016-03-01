@@ -4,7 +4,7 @@ object Main {
 
   def main(args: Array[String]) {
     println("Test")
-    val line = convertToInt(scala.io.StdIn.readLine())
+    val line = convertToInt(readLine())
 
   }
 
