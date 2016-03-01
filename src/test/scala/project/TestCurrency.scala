@@ -109,6 +109,5 @@ class TestCurrency extends FunSuite with BeforeAndAfter {
     val result = bank.reduce(totalSubstraction, Money.DOLLAR_CURRENCY)
 
     assert(result == Money.dollar(4))
-
   }
 }
