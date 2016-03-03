@@ -14,7 +14,7 @@ class TestProfitability extends FunSuite with BeforeAndAfter {
   val CONSUMPTION_MINING: Double = 320
   val PRICE_PER_KWH = Money.dollar(0.38)
 
-  val DECRED_TO_DOLLAR = 2.23
+  val DECRED_TO_DOLLAR = 1.80
   val DOLLAR_TO_EURO = 0.91
 
   var bank:Bank = _
@@ -39,8 +39,9 @@ class TestProfitability extends FunSuite with BeforeAndAfter {
 
   test("Get earning in Euro given the production, the consumption, and the number of hours") {
     val expectedPerHour = Money.euro(makeExpectedEarningPerHourInDollar(bank).amount * DOLLAR_TO_EURO)
-    val hours = 5235
+    val hours = 24*25
     assert(expectedPerHour.times(hours) == profitability.getEarnings(hours, Money.EURO_CURRENCY))
+    println(profitability.getEarnings(hours, Money.EURO_CURRENCY))
   }
 
   def makeExpectedEarningPerHourInDollar(bank: Bank): Money = {

@@ -1,4 +1,4 @@
-package project
+package project.leaning
 
 import org.json4s.DefaultFormats
 import org.json4s.native.JsonMethods
@@ -43,8 +43,10 @@ class LearningTestJson4s extends FunSuite with BeforeAndAfter{
 
     assert(rates.usd.nonEmpty && rates.eur.nonEmpty)
   }
-}
 
+}
 
 case class Rates(usd: String, eur: String, cny: String, cad: String, rub: String, btc: String)
 case class Toddler(name: String, age: Int, greeting: String)
+
+

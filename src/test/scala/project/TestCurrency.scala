@@ -8,63 +8,31 @@ import project.currency._
   */
 class TestCurrency extends FunSuite with BeforeAndAfter {
 
-  val DECRED_CURRENCY = Money.DECRED_CURRENCY
-  val DOLLAR_CURRENCY = Money.DOLLAR_CURRENCY
-
-  var fiveDecred: Money = _
-  var eightDecred: Money = _
-  var fiveDollar: Money = _
-  var eightDollar: Money = _
+  var bank: Bank = _
 
   before {
-    fiveDecred = Money.decred(5)
-    eightDecred = Money.decred(8)
-    fiveDollar = Money.dollar(5)
-    eightDollar = Money.dollar(8)
+    bank = new Bank()
+    bank.addRate(Money.DECRED_CURRENCY, Money.DOLLAR_CURRENCY, 2)
   }
 
   test("Test multiplication : 5$ * 8 = 40") {
+    val fiveDollar = Money.dollar(5)
     val result = fiveDollar.times(8)
     assert(Money.dollar(5 * 8) == result)
   }
 
   test("Test equality with Money") {
-    val otherFive: Money = Money.decred(5)
-    assert(otherFive == fiveDecred)
-    val otherEight: Money = Money.decred(8)
-    assert(otherEight != fiveDecred)
-    val otherFiveDollar: Money = Money.dollar(5)
-    assert(otherFiveDollar != fiveDecred)
+    assert(Money.decred(5) == Money.decred(5))
+    assert(Money.decred(5) != Money.decred(8))
+    assert(Money.dollar(5) != Money.decred(5))
   }
 
   test("Check if the right currency is used") {
-    assert(fiveDecred.currency == DECRED_CURRENCY)
-    assert(eightDollar.currency == DOLLAR_CURRENCY)
-  }
-
-  test("Test simple addition using the Bank to resolve currencies : 5$ + 8$ = 13$") {
-    val sum:Expression = fiveDollar.plus(eightDollar)
-    val bank = new Bank
-    val result = bank.reduce(sum, Money.DOLLAR_CURRENCY)
-    assert(result == Money.dollar(5 + 8))
-  }
-
-  test("Test reduce sum") {
-    val sum = new Sum(Money.dollar(1), Money.dollar(2))
-    val bank = new Bank
-    val result = bank.reduce(sum, Money.DOLLAR_CURRENCY)
-    assert(result == Money.dollar(3))
-  }
-
-  test("Test reduce money : 1DEC == 1DEC") {
-    val bank = new Bank
-    val result = bank.reduce(Money.dollar(1), Money.DOLLAR_CURRENCY)
-    assert(Money.dollar(1) == result)
+    assert(Money.decred(5).currency == Money.DECRED_CURRENCY)
+    assert(Money.dollar(8).currency == Money.DOLLAR_CURRENCY)
   }
 
   test("Test reduce money with different currencies") {
-    val bank = new Bank
-    bank.addRate(Money.DECRED_CURRENCY, Money.DOLLAR_CURRENCY, 2)
     val result = bank.reduce(Money.decred(1), Money.DOLLAR_CURRENCY)
     assert(Money.dollar(2) == result)
   }
@@ -76,13 +44,11 @@ class TestCurrency extends FunSuite with BeforeAndAfter {
     }
   }
 
-  test("1 Decred + 1 Dollar == 3 Dollar if conversion rate is : 1DEC -> 2USD") {
+  test("Test reduce Sum : 1 Decred + 1 Dollar == 3 Dollar if conversion rate is : 1DEC -> 2USD") {
     val oneDollar:Expression = Money.dollar(1)
     val oneDecred:Expression = Money.decred(1)
 
     val sum:Expression = oneDecred.plus(oneDollar)
-    val bank = new Bank()
-    bank.addRate(Money.DECRED_CURRENCY, Money.DOLLAR_CURRENCY, 2)
     val result = bank.reduce(sum, Money.DOLLAR_CURRENCY)
     assert(result == Money.dollar(3))
   }
@@ -92,8 +58,6 @@ class TestCurrency extends FunSuite with BeforeAndAfter {
     val twoDollar = Money.dollar(2)
 
     val totalsum = sumEquals3Dollars.plus(twoDollar)
-    val bank = new Bank
-    bank.addRate(Money.DECRED_CURRENCY, Money.DOLLAR_CURRENCY, 2)
     val result = bank.reduce(totalsum, Money.DOLLAR_CURRENCY)
 
     assert(result == Money.dollar(5))
@@ -104,8 +68,6 @@ class TestCurrency extends FunSuite with BeforeAndAfter {
     val oneDollar = Money.dollar(1)
 
     val totalSubstraction = equalsFiveDollars.minus(oneDollar)
-    val bank = new Bank
-    bank.addRate(Money.DECRED_CURRENCY, Money.DOLLAR_CURRENCY, 2)
     val result = bank.reduce(totalSubstraction, Money.DOLLAR_CURRENCY)
 
     assert(result == Money.dollar(4))
