@@ -18,11 +18,12 @@ import scala.concurrent.Await
 class TestGetRatesFromInternet extends FunSuite with BeforeAndAfter{
 
   test("Get the rates from the internet") {
+    pending
     implicit val httpClient = new ApacheHttpClient
     val url = new URL("http://coinmarketcap-nexuist.rhcloud.com/api/dcr/price")
 
     val request = GET(url)
-    val response = Await.result(request.apply, 2.second)
+    val response = Await.result(request.apply, 5.second)
     assert(response.bodyString.startsWith("{\n  \"usd\":"))
   }
 

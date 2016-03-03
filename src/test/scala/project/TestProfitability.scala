@@ -32,19 +32,26 @@ class TestProfitability extends FunSuite with BeforeAndAfter {
   }
 
   test("Get earning in Dollar given the production, the consumption, and the number of hours") {
-    val expectedPerHour = makeExpectedEarningPerHourInDollar(bank)
+    val expectedPerHour = makeExpectedEarningPerHourInDollar()
     val hours = 5
     assert(expectedPerHour.times(hours) == profitability.getEarnings(hours, Money.DOLLAR_CURRENCY))
   }
 
   test("Get earning in Euro given the production, the consumption, and the number of hours") {
-    val expectedPerHour = Money.euro(makeExpectedEarningPerHourInDollar(bank).amount * DOLLAR_TO_EURO)
+    val expectedPerHour = Money.euro(makeExpectedEarningPerHourInDollar().amount * DOLLAR_TO_EURO)
     val hours = 24*25
     assert(expectedPerHour.times(hours) == profitability.getEarnings(hours, Money.EURO_CURRENCY))
     println(profitability.getEarnings(hours, Money.EURO_CURRENCY))
   }
 
-  def makeExpectedEarningPerHourInDollar(bank: Bank): Money = {
+  test("Get the amount of electricity spent given a number of Decred produced") {
+    val decredProduced = Money.decred(20)
+    val expectedSpent = makeExpectedSpentInEuro(decredProduced)
+    assert(expectedSpent == profitability.getSpent(decredProduced, Money.EURO_CURRENCY))
+    println("Expected Spent : " + expectedSpent)
+  }
+
+  def makeExpectedEarningPerHourInDollar(): Money = {
     val extraConsumption = CONSUMPTION_MINING - CONSUMPTION_IDLE
     val extraConsumptionKwh = extraConsumption / 1000
     val spentInOneHour = PRICE_PER_KWH.times(extraConsumptionKwh)
@@ -52,6 +59,16 @@ class TestProfitability extends FunSuite with BeforeAndAfter {
     val earnedInONeHour = PRODUCTION_PER_HOUR.minus(spentInOneHour)
 
     bank.reduce(earnedInONeHour, Money.DOLLAR_CURRENCY)
+  }
+
+  def makeExpectedSpentInEuro(decredProduced: Money): Money = {
+    val numberOfHours = decredProduced.amount / PRODUCTION_PER_HOUR.amount
+    println(numberOfHours)
+    val extraConsumption = CONSUMPTION_MINING - CONSUMPTION_IDLE
+    val extraConsumptionKwh = extraConsumption / 1000
+    val priceSpentInDollar = PRICE_PER_KWH.times(extraConsumptionKwh).times(numberOfHours)
+
+    bank.reduce(priceSpentInDollar, Money.EURO_CURRENCY)
   }
 
 }

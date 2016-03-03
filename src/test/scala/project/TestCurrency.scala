@@ -72,4 +72,11 @@ class TestCurrency extends FunSuite with BeforeAndAfter {
 
     assert(result == Money.dollar(4))
   }
+
+  test("Division of a Money => Return a Money same currency") {
+    val tenDollar = Money.dollar(10)
+    val division = tenDollar.dividedBy(3)
+
+    assert(division == Money.dollar(10.0 / 3))
+  }
 }

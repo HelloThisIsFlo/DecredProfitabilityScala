@@ -20,4 +20,14 @@ class TestProduction extends FunSuite with BeforeAndAfter{
 
     assert(Money.decred(expected) == production.getProduction(hours, Money.DECRED_CURRENCY))
   }
+
+  test("Get the number of hours spent to produce a certain ammount of Decred") {
+    val production = new Production(bank, PRODUCTION_PER_HOUR)
+    val produced = Money.decred(1)
+
+    val expectedHours = 10
+    assert(expectedHours == production.getHoursSpent(produced))
+  }
+
+
 }

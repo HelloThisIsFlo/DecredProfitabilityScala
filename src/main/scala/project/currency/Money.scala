@@ -25,6 +25,10 @@ class Money(val amount: Double, val currency:String)  extends Expression {
     new Money(this.amount * factor, this.currency)
   }
 
+  def dividedBy(factor: Double): Money = {
+    new Money(this.amount / factor, this.currency)
+  }
+
   override def reduce(bank: Bank, currency: String): Money =  {
     val rate = bank.getRate(this.currency, currency)
     new Money(rate * this.amount, currency)
@@ -54,7 +58,7 @@ class Money(val amount: Double, val currency:String)  extends Expression {
     state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
   }
 
-  override def toString(): String = {
+  override def toString: String = {
     amount + " " + currency
   }
 }
